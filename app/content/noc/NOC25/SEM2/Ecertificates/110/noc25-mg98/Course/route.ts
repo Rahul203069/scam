@@ -4,37 +4,37 @@ import path from 'path';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const certificateId = searchParams.get('q'); 
+  const q = searchParams.get('q'); // This will be "NPTEL...pdf"
 
+  if (!q) {
+    return new NextResponse('Missing query parameter', { status: 400 });
+  }
 
-  // 1. Point to the specific hardcoded file
-  const filePath = path.join(process.cwd(), 'certificates', 'NPTEL25MG98S358900037.pdf');
+  // Remove .pdf from the string if you only want the ID, 
+  // but since we need the file, we ensure we are looking for the correct filename
+  const fileName = q.endsWith('.pdf') ? q : `${q}.pdf`;
+
+  // Path to your local storage folder
+  const filePath = path.join(process.cwd(), 'certificates', fileName);
 
   try {
     if (!fs.existsSync(filePath)) {
-      console.error("File missing at:", filePath);
+      console.error("File not found at:", filePath);
       return new NextResponse('Certificate file not found', { status: 404 });
     }
 
-    // 2. Read the file
     const fileBuffer = fs.readFileSync(filePath);
 
-    // Debugging: check your terminal to see if the file actually has content
-    console.log(`Serving PDF. Size: ${fileBuffer.length} bytes`);
-
     if (fileBuffer.length === 0) {
-        return new NextResponse('File is empty', { status: 500 });
+      return new NextResponse('File is empty', { status: 500 });
     }
 
-    // 3. FIX: Convert Node Buffer to a Web Blob
-    const blob = new Blob([fileBuffer], { type: 'application/pdf' });
-
-    // 4. Return the Blob
-    return new NextResponse(blob, {
+    // Return the PDF using the modern NextResponse constructor
+    return new NextResponse(fileBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
-        // 'inline' ensures it opens in the browser viewer
-        'Content-Disposition': `inline; filename="NPTEL25MG98S358900037.pdf"`, 
+        'Content-Disposition': `inline; filename="${fileName}"`,
+        'Cache-Control': 'public, max-age=31536000, immutable',
       },
     });
 
