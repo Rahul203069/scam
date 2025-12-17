@@ -6,9 +6,6 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const certificateId = searchParams.get('q'); 
 
-  if (!certificateId) {
-    return new NextResponse('Certificate ID missing', { status: 400 });
-  }
 
   // 1. Point to the specific hardcoded file
   const filePath = path.join(process.cwd(), 'certificates', 'certificate.pdf');
