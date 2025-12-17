@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "archive.nptel.ac.in",
+  icons: {
+    icon: "/bbbjo.svg?v=1", // Must match your new filename exactly
+  },
   
 };
 
