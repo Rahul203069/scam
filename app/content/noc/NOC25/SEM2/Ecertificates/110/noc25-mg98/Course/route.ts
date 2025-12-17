@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
 
   // 1. Point to the specific hardcoded file
-  const filePath = path.join(process.cwd(), 'certificates', 'certificate.pdf');
+  const filePath = path.join(process.cwd(), 'certificates', 'NPTEL25MG98S358900037.pdf');
 
   try {
     if (!fs.existsSync(filePath)) {
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       headers: {
         'Content-Type': 'application/pdf',
         // 'inline' ensures it opens in the browser viewer
-        'Content-Disposition': `inline; filename="certificate.pdf"`, 
+        'Content-Disposition': `inline; filename="NPTEL25MG98S358900037.pdf"`, 
       },
     });
 
